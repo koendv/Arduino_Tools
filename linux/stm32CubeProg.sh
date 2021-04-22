@@ -48,7 +48,7 @@ check_tool() {
   fi
 }
 
-check_tool
+#check_tool
 
 if [ $# -lt 2 ]; then
   echo "Not enough arguments!"
@@ -60,42 +60,51 @@ PROTOCOL=$1
 FILEPATH=$2
 # Protocol $1
 # 1x: Erase all sectors
-if [ "$1" -ge 10 ]; then
-  ERASE="yes"
-  PROTOCOL=$(($1 - 10))
-fi
 # Protocol $1
 # 0: SWD
 # 1: Serial
 # 2: DFU
 case $PROTOCOL in
   0)
-    PORT="SWD"
-    MODE="mode=UR"
-    shift 2
+    # swd
+    /usr/bin/st-flash write ${FILEPATH} ${ADDRESS}
     ;;
   1)
+    # serial
     if [ $# -lt 3 ]; then
       usage 3
     else
       PORT=$3
-      shift 3
+      /usr/bin/stm32flash -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
     fi
     ;;
   2)
-    PORT="USB1"
-    shift 2
+    # dfu
+    /usr/bin/dfu-util -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
+    ;;
+  10)
+    # swd with erase
+    /usr/bin/st-flash erase
+    /usr/bin/st-flash write ${FILEPATH} ${ADDRESS}
+    ;;
+  11)
+    # serial with erase
+    if [ $# -lt 3 ]; then
+      usage 3
+    else
+      PORT=$3
+      /usr/bin/stm32flash -o /dev/${PORT}
+      /usr/bin/stm32flash -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
+    fi
+    ;;
+  12)
+    # dfu with erase
+    /usr/bin/dfu-util -s:mass-erase:force -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
     ;;
   *)
     echo "Protocol unknown!"
     usage 4
     ;;
 esac
-
-if [ $# -gt 0 ]; then
-  OPTS="$*"
-fi
-
-${STM32CP_CLI} -c port=${PORT} ${MODE} ${ERASE:+"-e all"} -q -d "${FILEPATH}" ${ADDRESS} "${OPTS}"
 
 exit $?

@@ -9,6 +9,10 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Choose dfu program by arch
 if [ "$(uname -m)" == "x86_64" ]; then
   DFU_UTIL=${DIR}/dfu-util_x86_64/dfu-util
+elif [ "$(uname -m)" == "aarch64" ]; then
+  DFU_UTIL=/usr/bin/dfu-util
+elif [ "$(uname -m)" == "armv7l" ]; then
+  DFU_UTIL=/usr/bin/dfu-util
 else
   DFU_UTIL=${DIR}/dfu-util/dfu-util
 fi

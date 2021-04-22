@@ -19,6 +19,15 @@ fi
 # Get the directory where the script is running.
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
+# Choose upload-reset program by arch
+if [ "$(uname -m)" == "aarch64" ]; then
+  UPLOAD_RESET=${DIR}/upload_reset_aarch64/upload-reset
+elif [ "$(uname -m)" == "armv7l" ]; then
+  UPLOAD_RESET=${DIR}/upload_reset_armv7l/upload-reset
+else
+  UPLOAD_RESET=${DIR}/upload-reset
+fi
+
 #  ----------------- IMPORTANT -----------------
 # The 2nd parameter to upload-reset is the delay after resetting before it exits
 # This value is in milliseonds
@@ -26,7 +35,7 @@ DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # 750ms to 1500ms seems to work on my Mac
 # This is less critical now that we automatically retry dfu-util
 
-if ! "${DIR}/upload-reset" "${dummy_port_fullpath}" 750; then
+if ! "${UPLOAD_RESET}" "${dummy_port_fullpath}" 750; then
   echo "****************************************" >&2
   echo "* Could not automatically reset device *" >&2
   echo "* Please manually reset device!        *" >&2
