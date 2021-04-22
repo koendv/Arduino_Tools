@@ -1,4 +1,4 @@
-# Arduino_Tools
+# Arduino_Tools for Raspberry
 [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Tools.svg)](https://github.com/stm32duino/Arduino_Tools/releases/latest)
 [![GitHub commits](https://img.shields.io/github/commits-since/stm32duino/Arduino_Tools/1.4.0.svg)](https://github.com/stm32duino/Arduino_Tools/compare/1.4.0...master)
 
@@ -8,4 +8,12 @@ Fork for Arduino IDE v2 on raspberry pi os. To use, start Arduino IDE v2. From t
 
  ```https://raw.githubusercontent.com/koendv/BoardManagerFiles/master/package_stmicroelectronics_index.json```
 
+Install the following packages:
+```
+sudo apt-get install stlink-tools stm32flash dfu-util
+```
+Optionally install the following package:
+```
+sudo apt-get install stlink-gui
+```
 
