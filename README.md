@@ -2,7 +2,7 @@
 
 ## Beta
 
-[![arduino ide 2.0](images/screenshot_small.jpg)](https://github.com/koendv/Arduino_Tools/raw/main/images/screenshot.png)
+[![arduino ide 2.0](images/screenshot_small.jpg)](https://github.com/koendv/Arduino_Tools/raw/master/images/screenshot.png))
 
 Fork of STM32 upload tools for Arduino IDE v2 on raspberry pi os.
 
@@ -18,6 +18,8 @@ sudo apt-get install stlink-gui
 Start Arduino IDE 2.0.0. From the menu choose *File->Preferences*. In *Additional boards manager URLSs*, add the following url:
 
  ```https://raw.githubusercontent.com/koendv/BoardManagerFiles/master/package_stmicroelectronics_index.json```
+
+This installs the board support package for STM32.
 
 If you like this, maybe you want to buy me a cup of tea:
 
