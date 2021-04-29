@@ -2,6 +2,8 @@
 
 ## Beta
 
+[![arduino ide 2.0](images/screenshot_small.jpg)](https://github.com/koendv/Arduino_Tools/raw/main/images/screenshot.png)
+
 Fork of STM32 upload tools for Arduino IDE v2 on raspberry pi os.
 
 To use, install the following packages:
@@ -17,6 +19,9 @@ Start Arduino IDE 2.0.0. From the menu choose *File->Preferences*. In *Additiona
 
  ```https://raw.githubusercontent.com/koendv/BoardManagerFiles/master/package_stmicroelectronics_index.json```
 
+If you like this, maybe you want to buy me a cup of tea:
+
+[![ko-fi](images/kofibutton.svg)](https://ko-fi.com/Q5Q03LPDQ)
 
 ## Compiling the IDE
 
