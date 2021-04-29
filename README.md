@@ -25,6 +25,6 @@ If you like this, maybe you want to buy me a cup of tea:
 
 [![ko-fi](images/kofibutton.svg)](https://ko-fi.com/Q5Q03LPDQ)
 
-## Compiling the IDE
+## Arduino IDE 2
 
  Binaries of arduino IDE 2.0.0 for raspberry can be downloaded [here](https://github.com/koendv/arduino-ide-raspberrypi). 
