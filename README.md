@@ -19,7 +19,7 @@ Start Arduino IDE 2.0.0. From the menu choose *File->Preferences*. In *Additiona
 
  ```https://raw.githubusercontent.com/koendv/BoardManagerFiles/master/package_stmicroelectronics_index.json```
 
-This installs the board support package for STM32.
+This installs the board support package for STM32. In the dropdown box *Select Other Board & Port* you should now be able to select STM32 boards.
 
 If you like this, maybe you want to buy me a cup of tea:
 
