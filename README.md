@@ -1,21 +1,15 @@
 # Arduino_Tools for Raspberry
 
-## Beta
-
-[![arduino ide 2.0](images/screenshot_small.jpg)](https://github.com/koendv/Arduino_Tools/raw/master/images/screenshot.png))
+[![arduino ide 2.0](images/screenshot_small.jpg)](https://github.com/koendv/Arduino_Tools/raw/master/images/screenshot.png)
 
 Fork of STM32 upload tools for Arduino IDE v2 on raspberry pi os.
 
-To use, install the following packages:
+To use, install the following packages on your raspberry pi:
 ```
-sudo apt-get install stlink-tools stm32flash dfu-util
-```
-Optionally install the following package:
-```
-sudo apt-get install stlink-gui
+sudo apt-get install stlink-tools stlink-gui stm32flash dfu-util
 ```
 
-Start Arduino IDE 2.0.0. From the menu choose *File->Preferences*. In *Additional boards manager URLSs*, add the following url:
+Start [Arduino IDE 2.0.0](https://github.com/koendv/arduino-ide-raspberrypi). From the menu choose *File->Preferences*. In *Additional boards manager URLSs*, add the following url:
 
  ```https://raw.githubusercontent.com/koendv/BoardManagerFiles/master/package_stmicroelectronics_index.json```
 
