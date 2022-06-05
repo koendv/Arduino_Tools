@@ -1,4 +1,4 @@
-#!/bin/sh -
+#!/bin/bash -
 set -o nounset # Treat unset variables as an error
 
 STM32CP_CLI=
@@ -31,6 +31,9 @@ usage() {
   echo "##   For Serial: <com_port>"
   echo "##     com_port: serial identifier (mandatory). Ex: /dev/ttyS0 or COM1"
   echo "##"
+  echo "## stm32 tools needed. run:"  
+  echo "##   sudo apt-get install stlink-tools stm32flash dfu-util"
+  echo "##"
   echo "## Note: all trailing arguments will be passed to the $STM32CP_CLI"
   echo "##   They have to be valid commands for STM32 MCU"
   echo "##   Ex: -g: Run the code at the specified address"
@@ -40,7 +43,7 @@ usage() {
   exit "$1"
 }
 
-if [[ ! -x $ST_UTIL || ! -x STM32_FLASH || ! -x DFU_UTIL ]]; \
+if [[ ! -x ${ST_FLASH} || ! -x ${STM32_FLASH} || ! -x ${DFU_UTIL} ]]; \
 then \
   echo install stm32 tools first. run; \
   echo "sudo apt-get install stlink-tools stm32flash dfu-util" ; 
@@ -78,7 +81,7 @@ case $PROTOCOL in
     ;;
   2)
     # dfu
-    ${DFU_UTIL} -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
+    ${DFU_UTIL} -d 0483:df11 -a 0 --dfuse-address ${ADDRESS} -D ${FILEPATH}
     ;;
   10)
     # swd with erase
@@ -91,16 +94,16 @@ case $PROTOCOL in
       usage 3
     else
       PORT=$3
-      ${STM32_FLASH} -o /dev/${PORT}
+      ${STM32_FLASH} -o -R /dev/${PORT}
       ${STM32_FLASH} -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
     fi
     ;;
   12)
     # dfu with erase
-    ${DFU_UTIL} -s:mass-erase:force -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
+    ${DFU_UTIL} -d 0483:df11 -a 0 --dfuse-address ${ADDRESS}:mass-erase:force -D ${FILEPATH}
     ;;
   *)
-    echo "Protocol unknown!"
+    echo "Protocol ${PROTOCOL} unknown!"
     usage 4
     ;;
 esac
