@@ -1,11 +1,16 @@
-#!/bin/bash
+#!/bin/sh -
 set -o nounset # Treat unset variables as an error
-STM32CP_CLI=STM32_Programmer.sh
+
+STM32CP_CLI=
 ADDRESS=0x8000000
 ERASE=""
 MODE=""
 PORT=""
 OPTS=""
+
+ST_FLASH=/usr/bin/st-flash
+STM32_FLASH=/usr/bin/stm32flash
+DFU_UTIL=/usr/bin/dfu-util
 
 ###############################################################################
 ## Help function
@@ -24,7 +29,7 @@ usage() {
   echo "## Options:"
   echo "##   For SWD and DFU: no mandatory options"
   echo "##   For Serial: <com_port>"
-  echo "##     com_port: serial identifier (mandatory). Ex: /dev/ttyS0"
+  echo "##     com_port: serial identifier (mandatory). Ex: /dev/ttyS0 or COM1"
   echo "##"
   echo "## Note: all trailing arguments will be passed to the $STM32CP_CLI"
   echo "##   They have to be valid commands for STM32 MCU"
@@ -35,20 +40,11 @@ usage() {
   exit "$1"
 }
 
-check_tool() {
-  if ! command -v $STM32CP_CLI > /dev/null 2>&1; then
-    export PATH="$HOME/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin":$PATH
-  fi
-  if ! command -v $STM32CP_CLI > /dev/null 2>&1; then
-    echo "$STM32CP_CLI not found."
-    echo "Please install it or add '<STM32CubeProgrammer path>/bin' to your PATH environment:"
-    echo "https://www.st.com/en/development-tools/stm32cubeprog.html"
-    echo "Aborting!"
-    exit 1
-  fi
-}
-
-#check_tool
+if [[ ! -x $ST_UTIL || ! -x STM32_FLASH || ! -x DFU_UTIL ]]; \
+then \
+  echo install stm32 tools first. run; \
+  echo "sudo apt-get install stlink-tools stm32flash dfu-util" ; 
+fi
 
 if [ $# -lt 2 ]; then
   echo "Not enough arguments!"
@@ -58,16 +54,18 @@ fi
 # Parse options
 PROTOCOL=$1
 FILEPATH=$2
+
 # Protocol $1
 # 1x: Erase all sectors
 # Protocol $1
 # 0: SWD
 # 1: Serial
 # 2: DFU
+
 case $PROTOCOL in
   0)
     # swd
-    /usr/bin/st-flash write ${FILEPATH} ${ADDRESS}
+     ${ST_FLASH} write ${FILEPATH} ${ADDRESS}
     ;;
   1)
     # serial
@@ -75,17 +73,17 @@ case $PROTOCOL in
       usage 3
     else
       PORT=$3
-      /usr/bin/stm32flash -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
+      ${STM32_FLASH} -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
     fi
     ;;
   2)
     # dfu
-    /usr/bin/dfu-util -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
+    ${DFU_UTIL} -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
     ;;
   10)
     # swd with erase
-    /usr/bin/st-flash erase
-    /usr/bin/st-flash write ${FILEPATH} ${ADDRESS}
+    ${ST_FLASH} erase
+    ${ST_FLASH} write ${FILEPATH} ${ADDRESS}
     ;;
   11)
     # serial with erase
@@ -93,13 +91,13 @@ case $PROTOCOL in
       usage 3
     else
       PORT=$3
-      /usr/bin/stm32flash -o /dev/${PORT}
-      /usr/bin/stm32flash -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
+      ${STM32_FLASH} -o /dev/${PORT}
+      ${STM32_FLASH} -g ${ADDRESS} -b 115200 -w ${FILEPATH} /dev/${PORT}
     fi
     ;;
   12)
     # dfu with erase
-    /usr/bin/dfu-util -s:mass-erase:force -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
+    ${DFU_UTIL} -s:mass-erase:force -D ${FILEPATH} -d 1eaf:0003 --intf 0 --alt 2
     ;;
   *)
     echo "Protocol unknown!"
